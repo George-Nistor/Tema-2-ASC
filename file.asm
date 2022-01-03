@@ -8,15 +8,15 @@
 	n: .space 4
 	lenght: .space 4
 	m: .space 4
-	v: .space 372		# 4 * 31 * 3
-	vf: .space 124		# 4 * 31
+	v: .space 372 # 4 * 31 * 3
+	vf: .space 124 # 4 * 31
 	
 	formatDecimal: .asciz "%d "
 	formatCharacter: .asciz "%c"
 	characterSpace: .asciz " "
 	formatScanf: .asciz "%d"
 .text
-printVector:			# printVector(vector, lenght)
+printVector: # printVector(vector, lenght)
 	pushl %ebp
 	movl %esp, %ebp
 	pushl lenght
@@ -60,8 +60,10 @@ findZero:
 	movl %esp, %ebp
 	pushl %edi
 
-	xorl %eax, %eax		# no zero found
+	xorl %eax, %eax # no zero found
 	xorl %ecx, %ecx
+	
+	movl $v, %edi
 	
 	fZ_for:
 		cmp lenght, %ecx
@@ -73,21 +75,21 @@ findZero:
 		
 		jmp fZ_for		
 	zeroFound:
-		movl %ecx, %eax 	# v[%eax] = 0
+		movl %ecx, %eax # v[%eax] = 0
 			 
 	fZ_exit:
 	popl %edi
 	popl %ebp
 	ret
 
-valid:					# valid(element, position)
+valid: # valid(element, position)
 	pushl %ebp
 	movl %esp, %ebp
 	pushl %edi
 	pushl %ebx
 	
-	movl 8(%ebp), %ebx		# element
-	movl 12(%ebp), %ecx 	# position
+	movl 8(%ebp), %ebx # element
+	movl 12(%ebp), %ecx # position
 		
 	movl $vf, %edi
 	cmp $3, (%edi, %ebx, 4)
@@ -98,7 +100,7 @@ valid:					# valid(element, position)
 	subl m, %ecx
 	subl $1, %ecx
 	
-	movl $v,  %edi	
+	movl $v, %edi	
 	
 	cmp $0, %ecx
 	jl limitOne
@@ -120,10 +122,10 @@ valid:					# valid(element, position)
 	cD_exit:
 	
 	movl $1, %eax
-	jmp valid_exit			# true
+	jmp valid_exit # true
 			
 	notValid:
-		xorl %eax, %eax	# false
+		xorl %eax, %eax # false
 	valid_exit:
 	popl %ebx
 	popl %edi
@@ -138,10 +140,10 @@ solve:
 	pushl %esi
 	
 	call findZero
-	movl %eax, %ebx		# v[%ebx] = 0
+	movl %eax, %ebx # v[%ebx] = 0
 	
 	cmp $0, %eax
-	je solve_success		# no zero found
+	je solve_success # no zero found
 	
 	movl $v, %edi
 	movl $vf, %esi
@@ -153,8 +155,8 @@ solve:
 		
 		incl %ecx
 		
-		push %ebx		# position
-		pushl %ecx	# element
+		push %ebx # position
+		pushl %ecx # element
 		call valid
 		pushl %eax
 				
@@ -168,8 +170,8 @@ solve:
 		jmp back_for
 		
 		back_valid:
-			movl %ecx, (%edi, %ebx, 4)	# v[%ebx] = %ecx
-			incl (%esi, %ecx, 4)		# vf[%ecx]++
+			movl %ecx, (%edi, %ebx, 4) # v[%ebx] = %ecx
+			incl (%esi, %ecx, 4) # vf[%ecx]++
 				
 			push %ecx
 			push %ebx
@@ -180,8 +182,8 @@ solve:
 			cmp $1, %eax
 			je solve_success
 			
-			movl $0, (%edi, %ebx, 4)		# v[%ebx] = 0
-			decl (%esi, %ecx, 4)		# vf[%ecx]--
+			movl $0, (%edi, %ebx, 4) # v[%ebx] = 0
+			decl (%esi, %ecx, 4) # vf[%ecx]--
 			jmp back_for
 	back_exit:
 	
@@ -200,7 +202,7 @@ solve:
 
 .global main
 main:
-	pushl $n			# read n
+	pushl $n # read n
 	pushl $formatDecimal
 	call scanf
 	popl %ebx
@@ -208,15 +210,15 @@ main:
 	
 	movl n, %eax	
 	mull three
-	movl %eax, lenght 	# lenght x = n*3
+	movl %eax, lenght # lenght x = n*3
 	
-	pushl $m			# read m
+	pushl $m # read m
 	pushl $formatDecimal
 	call scanf
 	popl %ebx
 	popl %ebx
 	
-	pushl $input		# read vector
+	pushl $input # read vector
 	call gets
 	popl %ebx
 	
@@ -240,8 +242,8 @@ main:
 		
 		popl %ecx
 		incl %ecx
-		movl %eax, (%edi, %ecx, 4)	# v[%ecx] = %eax
-		incl (%esi, %eax, 4)		# vf[%eax]++
+		movl %eax, (%edi, %ecx, 4) # v[%ecx] = %eax
+		incl (%esi, %eax, 4) # vf[%eax]++
 		pushl %ecx
 		
 		pushl $characterSpace
@@ -253,7 +255,7 @@ main:
 		jmp et_strtok	
 exit_strtok:
 
-call solve 						# backtracking
+call solve # backtracking
 
 cmp $1, %eax
 je success
