@@ -8,8 +8,8 @@
 	n: .space 4
 	lenght: .space 4
 	m: .space 4
-	v: .space 372 # 4 * 31 * 3
-	vf: .space 124 # 4 * 31
+	v: .space 400
+	vf: .space 160
 	
 	formatDecimal: .asciz "%d "
 	formatCharacter: .asciz "%c"
